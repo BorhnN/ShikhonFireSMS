@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-import android.util.Log;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * Created by borhan on 4/29/17.
@@ -14,10 +16,10 @@ import android.util.Log;
 public class SmsReceiver extends BroadcastReceiver {
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
     private static final String TAG = "SmsReceiver";
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive: sadf");
         if (intent.getAction().equals(SMS_RECEIVED)) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
@@ -35,8 +37,15 @@ public class SmsReceiver extends BroadcastReceiver {
                 }
                 String sender = messages[0].getOriginatingAddress();
                 String message = sb.toString();
-                Log.d(TAG, "onReceive: ");
+                String s = message.toLowerCase();
+                if (s.startsWith("reg ")){
+                    postDataToFireBase(message);
+                }
             }
         }
+    }
+
+    private void postDataToFireBase(String message) {
+        databaseReference.child("AllData").push().setValue(RegObject.fromRegSMS(message));
     }
 }
