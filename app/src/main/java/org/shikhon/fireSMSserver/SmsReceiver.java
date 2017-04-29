@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import android.util.Log;
 
 /**
  * Created by borhan on 4/29/17.
@@ -12,9 +13,11 @@ import android.telephony.SmsMessage;
 
 public class SmsReceiver extends BroadcastReceiver {
     private static final String SMS_RECEIVED = "android.provider.Telephony.SMS_RECEIVED";
+    private static final String TAG = "SmsReceiver";
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d(TAG, "onReceive: sadf");
         if (intent.getAction().equals(SMS_RECEIVED)) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
@@ -32,6 +35,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 }
                 String sender = messages[0].getOriginatingAddress();
                 String message = sb.toString();
+                Log.d(TAG, "onReceive: ");
             }
         }
     }
